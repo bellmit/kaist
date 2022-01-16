@@ -27,14 +27,12 @@ const session = new Vue({
             this.user = null
         },
         async logout() {
-            this.login_check=false
-            this.anyone_authorized=false
             this.$session.unsetToken()
             await this.$http.post('logout')
             sessionStorage.setItem('user','')
             sessionStorage.setItem('sessionToken', '')
             this.authorized = false
-            this.$router.push('/searchmain').catch(()=>{});
+            this.$router.push('/login').catch(()=>{});
             location.reload(true)
         },
         getUserId() {
@@ -87,8 +85,6 @@ const session = new Vue({
     data () {
         return {
             authorized: false,
-            anyone_authorized:false,
-            login_check:false,
             search_string:''
         }
     }

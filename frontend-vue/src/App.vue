@@ -1,30 +1,16 @@
 <template>
-<!--  <main-layout v-if="$session.authorized">-->
-<!--    <router-view></router-view>-->
-<!--  </main-layout>-->
-  <Mainlayout v-if="$session.authorized || $session.anyone_authorized">
-    <router-view ></router-view>
-    <modal />
-    <v-dialog v-model="dialog.show" max-width="500px">
-      <v-card>
-        <v-card-title>{{dialog.message}}</v-card-title>
-        <v-card-actions>
-          <v-btn tile depressed class="flex-grow-1" @click="dialog.show = false">확인</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </Mainlayout>
-  <SearchMain v-else-if="!$session.login_check" />
+  <main-layout v-if="$session.authorized">
+    <router-view></router-view>
+  </main-layout>
   <Login v-else />
 </template>
 
 <script>
 import Login from "./views/Login";
-import SearchMain from "./views/SearchMain";
 import Modal from '@/components/Modal'
 export default {
   name: 'App',
-  components: {SearchMain,Modal,Login},
+  components: {Modal,Login},
   mounted() {
     this.$session.$on('dialog', params => {
       this.dialog.show = params.show

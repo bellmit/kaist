@@ -8,31 +8,10 @@
     width="304"
   >
     <CSidebarBrand class="d-md-down-none" @click="move_first()">
-       <div class="kitech-log"> </div>
-<!--      <span class="cb-log">-->
-<!--        인공지능 특허검색-->
-<!--      </span>-->
-<!--      <CIcon-->
-<!--        class="c-sidebar-brand-full"-->
-<!--        name="logo"-->
-<!--        size="custom-size"-->
-<!--        :height="35"-->
-<!--        viewBox="0 0 556 134"-->
-<!--      />-->
-<!--      <CIcon-->
-<!--        class="c-sidebar-brand-minimized"-->
-<!--        name="logo"-->
-<!--        size="custom-size"-->
-<!--        :height="35"-->
-<!--        viewBox="0 0 110 134"-->
-<!--      />-->
+       <div class="kaist-log"> </div>
     </CSidebarBrand>
     <CRenderFunction v-if="$session.authorized" flat :content-to-render="$options.nav"/>
     <CRenderFunction v-else flat :content-to-render="$options.nav_anyone"/>
-<!--    <CSidebarMinimizer-->
-<!--      class="d-md-down-none"-->
-<!--      @click.native="$store.commit('set', ['sidebarMinimize', !minimize])"-->
-<!--    />-->
   </CSidebar>
 </template>
 
@@ -57,9 +36,9 @@ export default {
     move_first() {
       if(this.$session.check_permission()){
         this.$session.logout()
-        this.$router.push('/searchmain').catch(()=>{});
+        this.$router.push('/login').catch(()=>{});
       }else{
-        this.$router.push('/searchmain').catch(()=>{});
+        this.$router.push('/login').catch(()=>{});
         location.reload(true)
       }
 
@@ -78,9 +57,9 @@ export default {
 .sidebar-bg{
   background-image: url('~@/assets/bg/left-bg.png');
 }
-.kitech-log{
-  background-image: url('~@/assets/bg/kitech-logo.png');
-  background-size: 130px;
+.kaist-log{
+  background-image: url('~@/assets/bg/kaist-logo.png');
+  background-size: 100px;
   position: absolute;
   left: 0.36%;
   right: 0.36%;

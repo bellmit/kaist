@@ -6,10 +6,9 @@ const TheContainer = () => import('@/containers/TheContainer')
 
 // Views
 const Login = () => import('@/views/Login')
-const Search = () => import('@/views/Search')
 
 // Manage
-const Patent = () => import('@/views/manager/patent')
+const InjectionData = () => import('@/views/manager/injectiondata')
 const Notification = () => import('@/views/manager/notification')
 const TechTrans = () => import('@/views/manager/TechTrans')
 const MarkettingData = () => import('@/views/manager/markettingdata')
@@ -44,16 +43,10 @@ function configRoutes () {
     },
     {
       path: '/',
-      redirect: '/searchmain',
+      redirect: '/login',
       name: '메인',
       component: TheContainer,
       children: [
-        {
-          path: 'search',
-          name: '검색',
-          component:Search,
-          props: true,
-        },
         {
           path: 'manager',
           name: '관리',
@@ -62,34 +55,19 @@ function configRoutes () {
           },
           children: [
             {
-              path: 'patent',
-              name: '특허문서관리',
-              component: Patent
+              path: 'injectiondata',
+              name: '사출기 데이터',
+              component: InjectionData
             },
             {
-              path: 'markettingdata',
-              name: '마케팅자료관리',
-              component: MarkettingData
+              path: 'cncoscidata',
+              name: 'CNC 진동 데이터',
+              component: InjectionData
             },
             {
-              path: 'notification',
-              name: '공지사항관리',
-              component: Notification
-            },
-            {
-              path: 'techtrans',
-              name: '기술이전문의관리',
-              component: TechTrans
-            },
-            {
-              path: 'smallpatent',
-              name: '소액기술관리',
-              component: SmallPatent
-            },
-            {
-              path: 'popupzone',
-              name: '팝업존관리',
-              component: PopupZone
+              path: 'cncpower',
+              name: 'CNC 전력 데이터',
+              component: InjectionData
             },
             {
               path: 'statisticslogs',

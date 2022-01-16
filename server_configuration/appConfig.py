@@ -13,15 +13,13 @@ class CommonConfig(object):
 
 
 class DevelopmentConfig(CommonConfig):
-    SQLALCHEMY_DATABASE_URI = 'mysql://dbadmin:p@ssw0rd@127.0.0.1/kitechnewdb'
-    SEARCH_API_URL = 'http://127.0.0.1:6050'
+    SQLALCHEMY_DATABASE_URI = 'mysql://dbadmin:p@ssw0rd@127.0.0.1/kaistdb'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    AUTH_URL = 'http://localhost:5000/api/ext/auth'
-    STATIC_FILE_PATH = 'c:\\project\\kitech\\'
+    STATIC_FILE_PATH = 'c:\\project\\neuraltech\\'
 
 class ProductionConfig(CommonConfig):
-    SQLALCHEMY_DATABASE_URI = 'mysql://dbadmin:kitech12!@127.0.0.1/kitechnewdb'
+    SQLALCHEMY_DATABASE_URI = 'mysql://dbadmin:p@ssw0rd@127.0.0.1/kaistdb'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SEARCH_API_URL = 'http://127.0.0.1:6050'
     AUTH_URL = 'http://101.101.215.87:443/api/ext/auth'
-    STATIC_FILE_PATH = '/home/itrc-media-server/deepir/server/frontend/dist/'
+    STATIC_FILE_PATH = '/data/neuraltech/frontend-vue/dist/'

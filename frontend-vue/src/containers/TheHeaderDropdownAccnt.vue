@@ -71,7 +71,7 @@ export default {
   methods: {
     logout () {
       this.$session.logout()
-      this.$router.push('/searchmain').catch(()=>{});
+      this.$router.push('/login').catch(()=>{});
       location.reload(true)
     }
   },

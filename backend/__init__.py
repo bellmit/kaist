@@ -71,5 +71,4 @@ def page_index():
 
 from backend.api_common import *
 from backend.api_user import *
-from backend.api_patent import *
-from backend.api_temp import *
+from backend.api_sensor import *
