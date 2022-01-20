@@ -22,8 +22,9 @@ export default [
       },
       {
         _name: 'CSidebarNavItem',
-        name: '통계관리',
-        to: '/manager/statisticslogs',
+        name: '주피터허브',
+        href: 'http://172.30.77.193:39470',
+        target:"_blank",
         icon: { name: 'cil-chart-pie', class: 'text-white' },
       },
     ]

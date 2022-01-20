@@ -7,7 +7,7 @@
             <CCard class="p-4">
               <CCardBody>
                 <CForm>
-                  <h1>KAIST 제조데이터 모니터링</h1>
+                  <h1>KAIST IoT 데이터 <br>모니터링 시스템</h1>
                   <p class="text-muted"></p>
                   <CInput
                     placeholder="사용자 아이디"
@@ -41,6 +41,7 @@
             >
               <CCardBody>
                 <h2>공지사항</h2>
+                <span>카이스트 IoT 데이터 모니터링 시스템 오픈</span>
               </CCardBody>
             </CCard>
           </CCardGroup>
@@ -62,17 +63,17 @@ export default {
       this.loading = true
       try {
         let {data} = await this.$http.post('login', this.form)
-        // alert(JSON.stringify(data))
         // if(this.form.password != 'kitech!@'){
         //   alert("패스워드 오류!!")
         //   location.reload(true)
         //   return data
         // }
-        if (data.status) this.$session.setToken(data.user)
+        if (data.status) {
+          await this.$session.setToken(data.user)
+          this.$router.push('/manager/injectiondata')
+        }
         else this.error = this.CONSTANT.LOGIN_ERR[data.reason] || `로그인 실패 [${data.reason}]`
-        this.$session.authorized = true
-        this.$router.push('/manager/injectiondata')
-        location.reload(true)
+
         return data
       }
       catch (err) {

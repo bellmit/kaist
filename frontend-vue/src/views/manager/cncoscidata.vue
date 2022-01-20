@@ -4,7 +4,7 @@
       <v-app class="sr-card-app-title">
         <CCardHeader>
           <CIcon name="cil-justify-center"/>
-          <strong> KAIST 사출기 데이터 </strong>
+          <strong> KAIST CNC 진동 데이터 </strong>
         </CCardHeader>
         <CCardBody>
           <CNavbar
@@ -77,7 +77,7 @@
               <v-btn fab x-small dark depressed color="grey darken-1" class="sensor-detail-close" @click="sensorDetail.show = false">
                 <v-icon>mdi-close</v-icon>
               </v-btn>
-              <injection-detail @callBackEvent="onEmitEvent" :injection_data="sensorDetail.data" />
+              <cncosci-detail @callBackEvent="onEmitEvent" :cncosci_data="sensorDetail.data" />
             </div>
           </v-card>
         </v-dialog>
@@ -106,18 +106,18 @@
 </template>
 
 <script>
-import InjectionDetail from '@/components/InjectionDetail'
+import CncosciDetail from '@/components/CncosciDetail'
 import axios from 'axios'
 import moment from 'moment'
 export default {
-  components: {InjectionDetail,moment},
+  components: {CncosciDetail,moment},
   methods: {
     async query() {
       this.table.loading = true;
       const { page, itemsPerPage } = this.table.options;
       let filters_and = []
       let filters_or = []
-      filters_and.push({name: 'sensor_type', op: 'eq', val: 'INJECTION'})
+      filters_and.push({name: 'sensor_type', op: 'eq', val: 'CNCOSCI'})
       // if(this.selected_tech != -1){
       //   filters_and.push({name: 'tech_type', op: 'eq', val: this.selected_tech})
       // }

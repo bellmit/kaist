@@ -9,11 +9,8 @@ const Login = () => import('@/views/Login')
 
 // Manage
 const InjectionData = () => import('@/views/manager/injectiondata')
-const Notification = () => import('@/views/manager/notification')
-const TechTrans = () => import('@/views/manager/TechTrans')
-const MarkettingData = () => import('@/views/manager/markettingdata')
-const SmallPatent = () => import('@/views/manager/SmallPatent')
-const PopupZone = () => import('@/views/manager/PopupZone')
+const CncosciData = () => import('@/views/manager/cncoscidata')
+const CncpowerData = () => import('@/views/manager/cncpowerdata')
 const StatisticsLogs = () => import('@/views/manager/StatisticsLogs')
 
 
@@ -62,12 +59,12 @@ function configRoutes () {
             {
               path: 'cncoscidata',
               name: 'CNC 진동 데이터',
-              component: InjectionData
+              component: CncosciData
             },
             {
               path: 'cncpower',
               name: 'CNC 전력 데이터',
-              component: InjectionData
+              component: CncpowerData
             },
             {
               path: 'statisticslogs',

@@ -22,6 +22,7 @@ from datetime import datetime, timedelta
 import openpyxl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.styles import Alignment
+import random
 api_headers = {'Content-type': 'application/json'}
 
 def post_get_many_source(result=None, **kw):
@@ -84,28 +85,24 @@ def sensor_data_upload():
 
     return make_response(jsonify(result), 200)
 
-def post_kitech_source(result=None, **kw):
-    print("patent_code :",result['patent_code'])
-    if result['patent_code'] is not None :
-        patent_pdf_file_path = os.getcwd() + '/pdf/' + result['patent_code'] + ".pdf"
-        if os.path.exists(patent_pdf_file_path):
-            result['patent_pdf_file_path'] = result['patent_code'] + ".pdf"
-    if result['maketting_file_path'] is not None :
-        patent_maketting_file_path = os.getcwd() + '/uploads/' + result['maketting_file_path']
-        if os.path.exists(patent_maketting_file_path):
-            result['patent_maketting_file_path'] = result['maketting_file_path']
-    if result['patent_code'] is not None :
-        patent_thumb_image_path = os.getcwd() + '/thumbnail/' + result['patent_code'] + ".jpg"
-        if os.path.exists(patent_thumb_image_path):
-            result['patent_thumb_image_path'] = result['patent_code'] + ".jpg"
-
-manager.create_api(KitechSource
+manager.create_api(SensorFiles
                    , results_per_page=10000
                    , url_prefix='/api/v1'
-                   , collection_name='sources'
+                   , collection_name='sensorfiles'
                    , methods=['GET', 'DELETE', 'PATCH', 'POST']
                    , allow_patch_many=True
-                   , postprocessors={'GET_SINGLE': [post_kitech_source]}
+                   , preprocessors={
+                        'POST': [check_token],
+                        'PATCH_SINGLE': [check_token_single],
+                        'GET_SINGLE': [check_token_single],
+                   })
+
+manager.create_api(SensorData
+                   , results_per_page=10000
+                   , url_prefix='/api/v1'
+                   , collection_name='sensordata'
+                   , methods=['GET', 'DELETE', 'PATCH', 'POST']
+                   , allow_patch_many=True
                    , preprocessors={
                         'POST': [check_token],
                         'PATCH_SINGLE': [check_token_single],
@@ -274,3 +271,39 @@ def statics_report_api():
     print("response['search_rank_objs'] :",response['search_rank_objs'] )
 
     return make_response(jsonify(response), 200)
+
+@app.route('/api/v1/gen_injection_dat', methods=['GET'])
+def gen_injection_dat_api():
+    for d in range(1,11):
+        file_name = './/data//injectiondata//212201{0}1500.csv'.format(str(d).zfill(2))
+        with open(file_name, 'wt') as f:
+            line = "CycleCount,TempZone1,TempZone2,TempZone3,TempZone4,TempZone5,CycleTime,InjectTime,Cushion(mm),Cushion(cm3),InjectPress,Alarms"
+            print("line :",line)
+            f.write(line + '\n')
+            for i in range(0,100):
+                CycleCount = str(i + 1).zfill(9)
+                TempZone1 = round(random.uniform(150.0,200.0),1)
+                TempZone2 = round(random.uniform(150.0,200.0),1)
+                TempZone3 = round(random.uniform(150.0,200.0),1)
+                TempZone4 = round(random.uniform(500.0,550.0),1)
+                TempZone5 = round(random.uniform(500.0,550.0),1)
+                CycleTime = round(random.uniform(10.0,15.0),1)
+                InjectTime = round(float(i)  + 0.01,1)
+                Cushion_mm = round(random.uniform(0.0,15.0),1)
+                Cushion_cm = round(random.uniform(0.0,15.0),1)
+                InjectPress = round(random.uniform(80.0,90.0),1)
+                Alarms = "x"
+                line = CycleCount + \
+                "," + str(TempZone1) + \
+                "," + str(TempZone2) + \
+                "," + str(TempZone3) + \
+                "," + str(TempZone4) + \
+                "," + str(TempZone5) + \
+                "," + str(CycleTime) + \
+                "," + str(InjectTime) + \
+                "," + str(Cushion_mm) + \
+                "," + str(Cushion_cm) + \
+                "," + str(InjectPress) + \
+                ",x"
+                f.write(line + '\n')
+    return make_response(jsonify({}), 200)

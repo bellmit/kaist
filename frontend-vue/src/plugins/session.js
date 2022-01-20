@@ -14,7 +14,7 @@ const session = new Vue({
                 }, ms)
             })
         },
-        setToken (user) {
+        async setToken (user) {
             $http.defaults.headers.common['token'] = user.token
             sessionStorage.setItem('user', JSON.stringify(user))
             this.authorized = true

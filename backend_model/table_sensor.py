@@ -8,27 +8,21 @@ import datetime
 db = DBManager.db
 
 
-class KitechSource(db.Model):
-    __tablename__ = 'tb_kitech_source'
+class SensorFiles(db.Model):
+    __tablename__ = 'tb_sensor_files'
 
     id = db.Column('id', db.Integer, primary_key=True)
-    patent_code = db.Column('patent_code', db.String(20)) # 특허번호
-    person = db.Column('person', db.String(50))
-    main_person = db.Column('main_person', db.String(50))
-    description = db.Column('description', db.Text)
-    invention_title = db.Column('invention_title', db.Text) # 특허제목
-    technical_field = db.Column('technical_field', db.Text)
-    background_art = db.Column('background_art', db.Text)
-    citation_list = db.Column('citation_list', db.Text)
-    summary_of_invention = db.Column('summary_of_invention', db.Text) # 특허요약
-    description_of_drawings = db.Column('description_of_drawings', db.Text)
-    description_of_embodiments = db.Column('description_of_embodiments', db.Text) # 특허본문
-    maketting_file_path = db.Column('maketting_file_path', db.String(200))
-    updated_date = db.Column('updated_date', db.DateTime, default=datetime.datetime.now)
-    apply_date = db.Column('apply_date', db.String(50))
-    tech_type = db.Column('tech_type', db.Integer)
-    #check = db.Column('check', db.Integer)
+    file_names = db.Column('file_names', db.String(50))
+    sensor_type = db.Column('sensor_type', db.String(50))
+    sensor_num = db.Column('sensor_num', db.Integer)
+    created_date = db.Column('created_date', db.DateTime, default=datetime.datetime.now)
 
+class SensorData(db.Model):
+    __tablename__ = 'tb_sensor_data'
+    id = db.Column('id', db.Integer, primary_key=True)
+    data_msg = db.Column('data_msg', db.String(65535))
+    fk_sensor_file_id = db.Column('fk_sensor_file_id', db.Integer)
+    created_date = db.Column('created_date', db.DateTime, default=datetime.datetime.now)
 
 class TB_VENDOR(db.Model):
     __tablename__ = 'tb_vendor'

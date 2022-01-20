@@ -35,7 +35,7 @@ def load_user(id):
 def login_api():
     data = json.loads(request.data)
     result = ''
-
+    print("111")
     if data['username'] is not None and data['password'] is not None:
         loginuser = db.session.query(Users).filter(Users.user_id == data["username"]).first()
 
@@ -44,11 +44,12 @@ def login_api():
         else:
             if loginuser.user_pw != password_encoder_512(data["password"]):
                 result = {'status': False, 'reason': 2} # PW 틀림
-
+                print("222")
             else:  # Login 성공
                 if loginuser.user_status == 2:
                     result = {'status': False, 'reason': 3}  # Activation 안됨
                 else:
+                    print("333")
                     loginuser.last_logon_time = datetime.datetime.now()
                     loginuser.token = generate_token(data['username'])
                     db.session.query(Users).filter(Users.user_id == data["username"])\
@@ -66,7 +67,7 @@ def login_api():
                     db.session.commit()
 
                     result = {'status': True, 'reason': 0, 'user': loginuser.serialize()}
-
+    print("444:",result)
     return make_response(jsonify(result), 200)
 
 @app.route("/api/v1/logout", methods=["POST"])
