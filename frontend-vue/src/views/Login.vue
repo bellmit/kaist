@@ -7,7 +7,7 @@
             <CCard class="p-4">
               <CCardBody>
                 <CForm>
-                  <h1>KAIST IoT 데이터 <br>모니터링 시스템</h1>
+                  <h1>KAIST IoT 데이터 <br>관리 시스템</h1>
                   <p class="text-muted"></p>
                   <CInput
                     placeholder="사용자 아이디"
@@ -41,7 +41,7 @@
             >
               <CCardBody>
                 <h2>공지사항</h2>
-                <span>카이스트 IoT 데이터 모니터링 시스템 오픈</span>
+                <span>카이스트 IoT 데이터 관리 시스템 오픈</span>
               </CCardBody>
             </CCard>
           </CCardGroup>
@@ -68,12 +68,17 @@ export default {
         //   location.reload(true)
         //   return data
         // }
+
         if (data.status) {
           await this.$session.setToken(data.user)
           this.$router.push('/manager/injectiondata')
+        }else {
+          if (data.reason == 1) {
+            alert('로그인이 실패(아이디를 확인하여주세요!)')
+          } else if (data.reason == 2) {
+            alert('로그인이 실패(패스워드를 확인하여주세요!)')
+          }
         }
-        else this.error = this.CONSTANT.LOGIN_ERR[data.reason] || `로그인 실패 [${data.reason}]`
-
         return data
       }
       catch (err) {

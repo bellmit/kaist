@@ -7,10 +7,10 @@
     class="sidebar-bg"
     width="304"
   >
-    <CSidebarBrand class="d-md-down-none" @click="move_first()">
+    <CSidebarBrand class="d-md-down-none">
        <div class="kaist-log"> </div>
     </CSidebarBrand>
-    <CRenderFunction v-if="$session.authorized" flat :content-to-render="$options.nav"/>
+    <CRenderFunction v-if="$session.getUserType() == 1" flat :content-to-render="$options.nav"/>
     <CRenderFunction v-else flat :content-to-render="$options.nav_anyone"/>
   </CSidebar>
 </template>

@@ -12,10 +12,147 @@
             <colgroup>
             </colgroup>
             <tr>
-              <th colspan="1">기본정보</th>
+              <th colspan="1">FFT or 1/3 Octave</th>
+              <th colspan="1">FFT Unit</th>
+              <th colspan="1">SamplingPeriod us</th>
+              <th colspan="1">SamplingCount</th>
             </tr>
             <tr >
-              <td colspan="1"><span></span>{{cncosci_data_objs}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[0].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[1].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[2].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[3].split(',')[1]}}</td>
+            </tr>
+            <tr>
+              <th colspan="1">FrequencyResolution Hz</th>
+              <th colspan="1">Window type</th>
+              <th colspan="1">OverlapRatio %</th>
+              <th colspan="1">TotalSamplingTime s</th>
+            </tr>
+            <tr >
+              <td colspan="1"><span></span>{{cncosci_data_objs[4].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[5].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[6].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[7].split(',')[1]}}</td>
+            </tr>
+            <tr>
+              <th colspan="1">FFTCountPer1Trigger</th>
+              <th colspan="1">AverageProcess</th>
+              <th colspan="1">SamplingDelayTimer 1ms</th>
+              <th colspan="1">CurrentFFTCount</th>
+            </tr>
+            <tr >
+              <td colspan="1"><span></span>{{cncosci_data_objs[8].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[9].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[10].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[11].split(',')[1]}}</td>
+            </tr>
+          </table>
+          <table class="abl-table-ts">
+            <colgroup>
+            </colgroup>
+            <tr>
+              <th colspan="12">FrequencyRange Hz</th>
+            </tr>
+            <tr>
+              <th colspan="1">Block1</th>
+              <th colspan="1">Block2</th>
+              <th colspan="1">Block3</th>
+              <th colspan="1">Block4</th>
+              <th colspan="1">Block5</th>
+              <th colspan="1">Block6</th>
+              <th colspan="1">Block7</th>
+              <th colspan="1">Block8</th>
+              <th colspan="1">Block9</th>
+              <th colspan="1">Block10</th>
+            </tr>
+            <tr >
+              <td colspan="1"><span></span>{{cncosci_data_objs[14].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[15].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[16].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[17].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[18].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[19].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[20].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[21].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[22].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[23].split(',')[1]}}</td>
+
+             </tr>
+          </table>
+          <table class="abl-table-ts">
+            <colgroup>
+            </colgroup>
+            <tr>
+              <th colspan="5">{{cncosci_data_objs[24].split(',')[1]}}</th>
+            </tr>
+            <tr>
+              <th colspan="1">RMS</th>
+              <th colspan="1">TimeAxisPeak</th>
+              <th colspan="1">CF</th>
+              <th colspan="1">OA</th>
+              <th colspan="1">Peak</th>
+            </tr>
+            <tr >
+              <td colspan="1"><span></span>{{cncosci_data_objs[25].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[26].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[27].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[28].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[29].split(',')[1]}}</td>
+            </tr>
+          </table>
+          <table class="abl-table-ts">
+            <colgroup>
+            </colgroup>
+            <tr>
+              <th colspan="1">POA1</th>
+              <th colspan="1">POA2</th>
+              <th colspan="1">POA3</th>
+              <th colspan="1">POA4</th>
+              <th colspan="1">POA5</th>
+              <th colspan="1">POA6</th>
+              <th colspan="1">POA7</th>
+              <th colspan="1">POA8</th>
+              <th colspan="1">POA9</th>
+              <th colspan="1">POA10</th>
+            </tr>
+            <tr >
+              <td colspan="1"><span></span>{{cncosci_data_objs[30].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[32].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[34].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[36].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[38].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[40].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[42].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[44].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[46].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[48].split(',')[1]}}</td>
+
+            </tr>
+            <tr>
+              <th colspan="1">Peak1</th>
+              <th colspan="1">Peak2</th>
+              <th colspan="1">Peak3</th>
+              <th colspan="1">Peak4</th>
+              <th colspan="1">Peak5</th>
+              <th colspan="1">Peak6</th>
+              <th colspan="1">Peak7</th>
+              <th colspan="1">Peak8</th>
+              <th colspan="1">Peak9</th>
+              <th colspan="1">Peak10</th>
+            </tr>
+            <tr >
+              <td colspan="1"><span></span>{{cncosci_data_objs[31].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[33].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[35].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[37].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[39].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[41].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[43].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[45].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[47].split(',')[1]}}</td>
+              <td colspan="1"><span></span>{{cncosci_data_objs[49].split(',')[1]}}</td>
+
             </tr>
           </table>
           <br>

@@ -82,6 +82,10 @@ import {
   cilTextShapes,
   cilListHighPriority,
   cilBadge,
+  cilGroup,
+  cilBolt,
+  cilAudioSpectrum,
+  cilSchool,
 } from '@coreui/icons'
 import { logo } from './logo'
 
@@ -138,7 +142,11 @@ export const iconsSet = Object.assign(
     cilChartLine,
     cilTextShapes,
     cilListHighPriority,
-    cilBadge
+    cilBadge,
+    cilGroup,
+    cilBolt,
+    cilAudioSpectrum,
+    cilSchool,
   },
   {
     cifUs,

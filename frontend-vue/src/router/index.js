@@ -11,13 +11,8 @@ const Login = () => import('@/views/Login')
 const InjectionData = () => import('@/views/manager/injectiondata')
 const CncosciData = () => import('@/views/manager/cncoscidata')
 const CncpowerData = () => import('@/views/manager/cncpowerdata')
-const StatisticsLogs = () => import('@/views/manager/StatisticsLogs')
+const Users = () => import('@/views/manager/users')
 
-
-// Views - Pages
-const Page404 = () => import('@/views/pages/Page404')
-const Page500 = () => import('@/views/pages/Page500')
-const Register = () => import('@/views/pages/Register')
 
 
 
@@ -32,12 +27,12 @@ export default new Router({
 
 function configRoutes () {
   return [
-    {
-      path: '/login',
-      redirect: '/login',
-      name: '로그인',
-      component:Login,
-    },
+    // {
+    //   path: '/login',
+    //   redirect: '/login',
+    //   name: '로그인',
+    //   component:Login,
+    // },
     {
       path: '/',
       redirect: '/login',
@@ -67,39 +62,14 @@ function configRoutes () {
               component: CncpowerData
             },
             {
-              path: 'statisticslogs',
-              name: '통계관리',
-              component: StatisticsLogs
+              path: 'users',
+              name: '사용자관리',
+              component: Users
             },
           ]
         },
      ]
-    },
-    {
-      path: '/pages',
-      redirect: '/pages/404',
-      name: 'Pages',
-      component: {
-        render (c) { return c('router-view') }
-      },
-      children: [
-        {
-          path: '404',
-          name: 'Page404',
-          component: Page404
-        },
-        {
-          path: '500',
-          name: 'Page500',
-          component: Page500
-        },
-        {
-          path: 'register',
-          name: 'Register',
-          component: Register
-        },
-      ]
-    },
+    }
   ]
 }
 

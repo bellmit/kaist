@@ -38,22 +38,6 @@ def pre_check_duplicate_userid(instance_id=None, data=None, **kw):
         data['token'] = generate_token(data['user_id'])
 
 
-def post_post_user(result=None, **kw):
-    if result['user_status'] == 2:
-        message = "아래의 링크를 클릭하여 인증을 한 후에 로그인 하세요.<br><br>"
-        link_str = "링크 : <a href='%s?id=%s&token=%s'>이메일인증하기</a>" % (app.config["AUTH_URL"], result['user_id'], result['token'])
-        message += link_str
-
-        server = smtplib.SMTP_SSL(app.config['SMTP_ADDR'], app.config['SMTP_PORT'])
-        server.login(app.config['SMTP_LOGIN_ID'], app.config['SMTP_LOGIN_PW'])
-
-        msg = MIMEMultipart('alternative')
-        msg['From'] = "%s <%s>" % ("", app.config['SMTP_SENDER'])
-        msg['To'] = result['email']
-        msg['Subject'] = "특허검색 회원가입 인증메일"
-        msg.attach(MIMEText(message, 'html', 'utf-8'))  # 내용 인코딩
-        server.sendmail(app.config['SMTP_SENDER'], result['email'], msg.as_string())
-
 
 manager.create_api(Users
                    , url_prefix='/api/v1'
@@ -65,8 +49,6 @@ manager.create_api(Users
                         'PATCH_SINGLE': [pre_check_duplicate_userid],
                         'GET_SINGLE': [check_token_single],
                         'GET_MANY': [check_token]
-                   }, postprocessors={
-                        'POST': [post_post_user]
                    })
 
 
@@ -103,57 +85,50 @@ def profile_api():
     return make_response(jsonify(result), 200)
 
 
-@app.route('/api/ext/auth', methods=['GET'])
-def email_auth_api():
-    id = request.args.get('id')
-    token = request.args.get('token')
+@app.route('/api/v1/user_register', methods=['POST'])
+def user_register_api():
+    data = json.loads(request.data)
+    result = ''
+    print("data:",data)
+    if data['user_id'] is not None:
+        user = db.session.query(Users).filter(Users.user_id == data["user_id"]).first()
+        if user is None:  # Insert
+            new_user = Users()
+            new_user.user_id = data['user_id']
+            new_user.user_pw = password_encoder_512(data["user_pw"])
+            new_user.user_name = data['user_name']
+            new_user.user_type = data['user_type']
+            new_user.user_status = 1
+            new_user.email = data['email']
+            db.session.add(new_user)
+            db.session.commit()
+            result = {'status': True, 'reason': 0, 'register_result': 1}
+        else :
+            result = {'status': True, 'reason': 0, 'register_result': 0}
 
-    if id is None or token is None:
-        return make_response("<script>alert('유효하지 않은 접속입니다.(1)');</script>", 200)
+    return make_response(jsonify(result), 200)
 
-    user = Users.query.filter(Users.user_id == id).filter(Users.token == token).first()
+@app.route('/api/v1/user_modify', methods=['POST'])
+def user_modify_api():
+    data = json.loads(request.data)
+    result = ''
+    print("data:",data)
+    if data['user_id'] is not None:
+        user = db.session.query(Users).filter(Users.user_id == data["user_id"]).first()
+        if user is not None:  # Insert
+            user_pw = user.user_pw
+            if data["user_pw"] != 'admin12!@':
+                user_pw = password_encoder_512(data["user_pw"])
+            obj = {
+                "user_name":data['user_name'],
+                "email":data['email'],
+                "user_pw":user_pw
+            }
+            db.session.query(Users).filter(Users.user_id == data["user_id"]).update(obj)
+            db.session.commit()
+            result = {'status': True, 'reason': 0, 'register_result': 1}
 
-    if user is None:
-        return make_response("<script>alert('유효하지 않은 접속입니다.(2)');</script>", 200)
-
-    Users.query.filter(Users.id == user.id).update({'user_status': 1})
-    db.session.commit()
-
-    return make_response("<script>alert('인증이 완료되었습니다.');</script>", 200)
-
-@app.route('/api/v1/users_passwd_clear', methods=['GET'])
-def users_passwd_clear_api():
-    print("users_passwd_clear start")
-    user_id = request.args.get('user_id')
-    user_name = request.args.get('user_name')
-    email = request.args.get('email')
-
-    user = Users.query.filter_by(user_id=user_id).filter_by(user_name=user_name).filter_by(email=email).first()
-    if user is not None :
-        passwd = 'chrlghk12!@'
-        message = "패스워드가 초기화 되었습니다.<br><br>"
-        link_str = "초기화 패스워드 : "  + str(passwd)
-        message += link_str
-        print("message :",message)
-        server = smtplib.SMTP_SSL(app.config['SMTP_ADDR'], app.config['SMTP_PORT'])
-        server.login(app.config['SMTP_LOGIN_ID'], app.config['SMTP_LOGIN_PW'])
-
-        msg = MIMEMultipart('alternative')
-        msg['From'] = "%s <%s>" % ("", app.config['SMTP_SENDER'])
-        msg['To'] = email
-        msg['Subject'] = "특허검색 패스워드 초기화 메일"
-        msg.attach(MIMEText(message, 'html', 'utf-8'))  # 내용 인코딩
-        server.sendmail(app.config['SMTP_SENDER'], email, msg.as_string())
-        print("msg :",msg)
-        Users.query.filter(Users.id == user.id).update({'user_pw': password_encoder_512(passwd)})
-        db.session.commit()
-        print("complete passwd :", password_encoder_512(passwd))
-    else :
-        return make_response("<script>alert('유효하지 않는 등록정보입니다..');</script>", 413)
-    return make_response("<script>alert('인증이 완료되었습니다.');</script>", 200)
-
-
-
+    return make_response(jsonify(result), 200)
 
 
 

@@ -12,23 +12,34 @@
               color="light"
           >
             <CCol sm="2">
-              <v-text-field outlined dense hide-details readonly
-                            label="시작일"
-                            v-model="search.dialog.form.acci_start_date"
-                            @click="setSearchDatetime(search.dialog.form,'acci_start_date')"
+              <v-select outlined dense hide-details
+                        v-model="selected_ch"
+                        :items="channel_list"
+                        label="채널"
+                        item-text="text"
+                        item-value="value"
+                        @change="onChangeChannel()"
+                        class="bg-white"
               />
             </CCol>
-            ~
-            <CCol sm="2">
-              <v-text-field outlined dense hide-details readonly
-                            label="종료일"
-                            v-model="search.dialog.form.acci_end_date"
-                            @click="setSearchDatetime(search.dialog.form,'acci_end_date')"
-              />
-            </CCol>
-            <CCol sm="6">
+            <!--            <CCol sm="2">-->
+            <!--              <v-text-field outlined dense hide-details readonly-->
+            <!--                            label="시작일"-->
+            <!--                            v-model="search.dialog.form.start_date"-->
+            <!--                            @click="setSearchDatetime(search.dialog.form,'start_date')"-->
+            <!--              />-->
+            <!--            </CCol>-->
+            <!--            ~-->
+            <!--            <CCol sm="2">-->
+            <!--              <v-text-field outlined dense hide-details readonly-->
+            <!--                            label="종료일"-->
+            <!--                            v-model="search.dialog.form.end_date"-->
+            <!--                            @click="setSearchDatetime(search.dialog.form,'end_date')"-->
+            <!--              />-->
+            <!--            </CCol>-->
+            <CCol sm="8">
               <v-text-field outlined dense hide-details
-                            placeholder="검색어를 입력하세요"
+                            placeholder="파일 이름을 입력하세요"
                             append-icon="mdi-magnify"
                             v-model="filter.querystring"
                             @keydown.enter="query()"
@@ -65,9 +76,9 @@
               <td class="clickable-row" >{{ row.item.file_names }}</td>
               <td class="clickable-row" >{{ row.item.sensor_num }}</td>
               <td> {{row.item.created_date | moment('YYYY-MM-DD HH:mm:ss')}}</td>
-              <td> <v-btn outlined x-small rounded color="primary" @click="onSensorDetailHandler(row.item)">그래프</v-btn></td>
-              <td> <v-btn outlined x-small rounded color="primary" @click="onSensorDetailHandler(row.item)">다운로드</v-btn></td>
               <td> <v-btn outlined x-small rounded color="primary" @click="onSensorDetailHandler(row.item)">상세보기</v-btn></td>
+              <td> <v-btn outlined x-small rounded color="primary" @click="onSensorGraphHandler(row.item)">그래프</v-btn></td>
+              <td> <v-btn outlined x-small rounded color="primary" @click="csv_download(row.item)">다운로드</v-btn></td>
             </tr>
           </template>
         </v-data-table>
@@ -78,6 +89,23 @@
                 <v-icon>mdi-close</v-icon>
               </v-btn>
               <cncosci-detail @callBackEvent="onEmitEvent" :cncosci_data="sensorDetail.data" />
+            </div>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="sensorGraph.show" persistent max-width="1200px">
+          <v-card >
+            <div class="sensor-detail-container-2">
+              <CCardHeader>
+                <CIcon name="cil-justify-center"/>
+                <strong> KAIST IoT 데이터 그래프(CNC 진동) </strong>
+              </CCardHeader>
+              <v-btn fab x-small dark depressed color="grey darken-1" class="sensor-detail-close" @click="sensorGraph.show = false">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+              <highcharts
+                  constructor-type="chart"
+                  :options="chart6Option"
+              />
             </div>
           </v-card>
         </v-dialog>
@@ -109,6 +137,30 @@
 import CncosciDetail from '@/components/CncosciDetail'
 import axios from 'axios'
 import moment from 'moment'
+import _ from 'lodash'
+const chartOptions = {
+  // chart: { zoomType: 'xy' },
+  title: { text: null },
+  colors: ['skyblue', 'orange'],
+  xAxis: [{ categories: [], crosshair: false }],
+  yAxis: [
+    {
+      labels: {format: '{value:,f}'},
+      title: {text: 'InjectPress'}
+    }
+  ],
+  credits: {enabled: false},
+  tooltip: {shared: true, crosshair: false},
+  series: [
+    {
+      type: 'line',
+      data: [],
+      dataLabels: {enabled: true, format: '{point.y:,f}'},
+      tooltip: {valueSuffix: ''}
+    }
+  ]
+}
+
 export default {
   components: {CncosciDetail,moment},
   methods: {
@@ -118,17 +170,11 @@ export default {
       let filters_and = []
       let filters_or = []
       filters_and.push({name: 'sensor_type', op: 'eq', val: 'CNCOSCI'})
-      // if(this.selected_tech != -1){
-      //   filters_and.push({name: 'tech_type', op: 'eq', val: this.selected_tech})
-      // }
-      // if(this.selected_year != '전체'){
-      //   filters_and.push({name: 'apply_date', op: 'eq', val: this.selected_year})
-      // }
-      // if (this.filter.querystring) {
-      //   filters_or.push({name: 'person', op: 'like', val: "%"+this.filter.querystring+"%"})
-      //   filters_or.push({name: 'patent_code', op: 'like', val: "%"+this.filter.querystring+"%"})
-      //   filters_or.push({name: 'description', op: 'like', val: "%"+this.filter.querystring+"%"})
-      // }
+      if(this.selected_ch != '전체')
+        filters_and.push({name: 'sensor_num', op: 'eq', val: this.selected_ch})
+      if (this.filter.querystring.length > 0) {
+        filters_or.push({name: 'file_names', op: 'like', val: "%"+this.filter.querystring+"%"})
+      }
 
       let q = {
         filters: [{or:filters_or},{and:filters_and}],
@@ -222,20 +268,18 @@ export default {
         return alert("저장실패!!")
 
     },
-    async excel_dowunload() {
-      // this.$session.$emit('modal-alert', '준비중입니다...')
+    async csv_download(item) {
       this.download_file_index += 1
       let params = {
-        tech_type:this.selected_tech,
-        years:this.selected_year,
-        search_string:this.filter.querystring,
+        id:item.id,
+        file_names:item.file_names,
+        sensor_type:item.sensor_type
       }
-      let {data} = await this.$http.get("patent_manage_download",{params});
+      let {data} = await this.$http.get("csv_download",{params});
       var url = this.$getWebURL() + '/api/v1/download/' + data.filename
       axios({
         method: 'get',
         url:url,
-        // url: 'search_result.xlsx',
         responseType: 'blob'
       })
           .then(response => {
@@ -244,7 +288,7 @@ export default {
             }))
             const link = document.createElement('a')
             link.href = url
-            var download_file_name = '한국생산기술연구원_특허문서리스트_' + this.download_file_index + ".xlsx"
+            var download_file_name = 'kaist_iot_' + item.file_names
             link.setAttribute('download', download_file_name) // or any other extension
             document.body.appendChild(link)
             link.click()
@@ -262,24 +306,76 @@ export default {
       this.search.datetime.form[this.search.datetime.datakey] = this.search.datetime.date;
       this.search.datetime.show = false;
     },
+    onSensorGraphHandler (sensorData) {
+      this.dialog.refresh_id += 1
+      this.sensorGraph.data = sensorData
+      this.sensorGraph.show = true
+      this.get_cncosci_data(this.sensorGraph.data.id)
+    },
+    async get_cncosci_data(id){
+      let filters_and = []
+      let filters_or = []
+      filters_and.push({name: 'fk_sensor_file_id', op: 'eq', val: id})
+      let q = {
+        filters: [{or:filters_or},{and:filters_and}],
+        order_by: [{field: 'id', direction: 'asc'}]
+      };
+
+      let params = {
+        q: JSON.stringify(q),
+      };
+      let { data } = await this.$http.get("sensordata", { params });
+      var msg = JSON.parse(data.objects[0].data_msg)
+      this.cncosci_data_objs = msg.msg.slice(52).map(v => ({
+        x: Number(v.split(',')[0]),
+        y: Number(v.split(',')[1])
+      }))
+      // this.cncosci_data_objs= JSON.parse(this.cncosci_data_objs.data_msg)
+      // alert(this.cncosci_data_objs)
+    },
+    onChangeChannel(){
+
+    },
+    async get_channels(){
+      let filters_and = []
+      let filters_or = []
+      filters_and.push({name: 'sensor_type', op: 'eq', val: 'CNCOSCI'})
+      let q = {
+        filters: [{or:filters_or},{and:filters_and}],
+        order_by: [{field: 'id', direction: 'asc'}]
+      };
+
+      let params = {
+        q: JSON.stringify(q),
+      };
+      let { data } = await this.$http.get("sensorfiles", { params });
+      let sensor_nums = data.objects.map(v=>({"sensor_num":v.sensor_num}))
+      let group = _.groupBy(sensor_nums,"sensor_num");
+
+      this.channel_list = ["전체"].concat(Object.keys(group))
+      this.selected_ch = this.channel_list[0]
+    },
   },
   mounted() {
     if(!this.$session.authorized){
       location.reload(true)
       return
     }
-    this.years_type.push('전체')
-    this.tech_types.push({text:'전체',value:-1})
-    this.tech_types = this.tech_types.concat(this.$constant.tech_types)
-    this.years_type = this.years_type.concat(this.years)
-    this.selected_tech = this.tech_types[0].value
-    this.selected_year = this.years_type[0]
+    this.get_channels()
   },
   computed: {
     years () {
       const year = new Date().getFullYear()
       return Array.from({length: year - 1989}, (value, index) => year - index)
-    }
+    },
+    chart6Option () {
+      let obj = _.cloneDeep(chartOptions)
+      if(this.cncosci_data_objs.length > 0) {
+        obj.series[0].data = this.cncosci_data_objs
+      }
+      obj.series[0].name = 'Frequeny Hz,CH0'
+      return obj
+    },
   },
   watch: {
     "table.options": {
@@ -297,12 +393,12 @@ export default {
       table: {
         headers: [
           { text: "No.", value: "id", sortable: false, width: 40 },
-          { text: "파일명", value: "file_names", sortable: false, width: 100 },
+          { text: "파일명", value: "file_names", sortable: false,align: "center", width: 100 },
           { text: "채널번호", value: "sensor_num", sortable: false,align: "center", width: 100 },
           { text: "생성일자", value: "created_date", sortable: false,align: "center", width: 100 },
+          {text: "상세보기", value: "",  sortable: false, align: "center", width: 100 },
           {text: "그래프", value: "",  sortable: false, align: "center", width: 100 },
           {text: "다운로드", value: "", sortable: false, align: "center", width: 100 },
-          {text: "상세", value: "",  sortable: false, align: "center", width: 100 },
         ],
 
         loading: false,
@@ -317,6 +413,7 @@ export default {
         show: false,
         data: null,
       },
+      cncosci_data_objs : [],
       dialog: {
         refresh_id :1,
         show: false,
@@ -330,6 +427,10 @@ export default {
       selected_year:null,
       selected_tech:null,
       download_file_index:0,
+      sensorGraph: {
+        show: false,
+        data: null,
+      },
       search: {
         dialog: {
           show: false,
@@ -346,6 +447,8 @@ export default {
           time: "",
         },
       },
+      selected_ch:"전체",
+      channel_list:[]
     };
   },
 };

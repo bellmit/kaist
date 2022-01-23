@@ -1,6 +1,15 @@
 <template>
   <main-layout v-if="$session.authorized">
     <router-view></router-view>
+    <modal />
+    <v-dialog v-model="dialog.show" max-width="500px">
+      <v-card>
+        <v-card-title>{{dialog.message}}</v-card-title>
+        <v-card-actions>
+          <v-btn tile depressed class="flex-grow-1" @click="dialog.show = false">확인</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </main-layout>
   <Login v-else />
 </template>
